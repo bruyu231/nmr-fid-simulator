@@ -8,25 +8,41 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.x"
+      # 1 – check out code
+      - uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      # 2 – set up Python
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"      # 3.11 by default on ubuntu-latest
 
-    - name: Smoke test
-      run: |
-        python nmr_simulator.py <<EOF
-no
-no
-no
-EOF
+      # 3 – install project dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4 – import smoke-test (fails CI if module cannot be imported)
+      - name: Smoke test – import module
+        run: |
+          python - <<'PY'
+          import importlib, sys
+          try:
+              importlib.import_module("nmr_simulator")  # change if module name differs
+              print("✅ module import ok")
+          except Exception as err:
+              print("❌ import failed:", err)
+              sys.exit(1)
+          PY
+
+      # 5 – run interactive script with three “no” answers
+      - name: Smoke test – run nmr_simulator.py (no / no / no)
+        run: |
+          python nmr_simulator.py <<'EOF'
+          no
+          no
+          no
+          EOF
