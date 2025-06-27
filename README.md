@@ -1,3 +1,5 @@
+![CI](https://github.com/gurdahari/nmr-fid-simulator/actions/workflows/python-package.yml/badge.svg)
+
 # NMR FID Simulator
 
 **Author:** Gur Dahari  
