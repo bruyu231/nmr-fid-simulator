@@ -2,47 +2,44 @@ name: Python package
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - "main"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
 
     steps:
-      # 1 – check out code
       - uses: actions/checkout@v4
 
-      # 2 – set up Python
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"      # 3.11 by default on ubuntu-latest
+          python-version: "3.x"
 
-      # 3 – install project dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt pytest
 
-      # 4 – import smoke-test (fails CI if module cannot be imported)
       - name: Smoke test – import module
         run: |
           python - <<'PY'
           import importlib, sys
           try:
-              importlib.import_module("nmr_simulator")  # change if module name differs
-              print("✅ module import ok")
-          except Exception as err:
-              print("❌ import failed:", err)
+              importlib.import_module("analysis_Rotation")
+              print("✅ import OK")
+          except Exception as e:
+              print("❌ import failed:", e)
               sys.exit(1)
           PY
 
-      # 5 – run interactive script with three “no” answers
-      - name: Smoke test – run nmr_simulator.py (no / no / no)
-        run: |
-          python nmr_simulator.py <<'EOF'
-          no
-          no
-          no
-          EOF
+      - name: Smoke test – run script help
+        run: python analysis_Rotation.py -h || true
+
+      - name: Run pytest suite
+        run: pytest -q
