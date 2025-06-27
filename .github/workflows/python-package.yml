@@ -31,7 +31,7 @@ jobs:
           python - <<'PY'
           import importlib, sys
           try:
-              importlib.import_module("analysis_Rotation")
+              importlib.import_module("nmr_simulator")
               print("✅ import OK")
           except Exception as e:
               print("❌ import failed:", e)
@@ -39,7 +39,7 @@ jobs:
           PY
 
       - name: Smoke test – run script help
-        run: python analysis_Rotation.py -h || true
+        run: python nmr_simulator.py -h || true
 
       - name: Run pytest suite
         run: pytest -q
