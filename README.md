@@ -23,7 +23,7 @@ and visualise both **time‑domain** and **frequency‑domain** results.
 ## Installation
 
 ```bash
-git clone https://github.com/<YOUR-USERNAME>/nmr-fid-simulator.git
+git clone https://github.com/gurdahari/nmr-fid-simulator.git
 cd nmr-fid-simulator
 python -m venv .venv && source .venv/bin/activate  # optional but recommended
 pip install -r requirements.txt
